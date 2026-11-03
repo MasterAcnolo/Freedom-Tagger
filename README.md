@@ -29,7 +29,12 @@ Apply renames and tags? (y/n):
 git clone https://github.com/MasterAcnolo/Freedom-Tagger
 cd Freedom-Tagger
 npm install
+
+# Use it locally
 node index.js <path> [options]
+
+# Or installing it to use it anywhere
+npm link
 ```
 
 ---

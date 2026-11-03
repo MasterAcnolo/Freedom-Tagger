@@ -1,5 +1,6 @@
 {
   "version": "1.0.0",
+  "name": "freedom-tagger",
   "description": "CLI tool to rename and tag a music folder using MusicBrainz",
   "homepage": "https://github.com/MasterAcnolo/Freedom-Tagger",
   "repository": {
