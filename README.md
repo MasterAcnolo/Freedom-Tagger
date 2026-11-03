@@ -52,7 +52,7 @@ freedom-tagger <path> [options]
 | `--artist` | `-a` | string | Artist or band name. Strongly recommended to narrow down the search. |
 | `--album` | `-r` | string | Album name. Defaults to the folder name if omitted. |
 | `--output` | `-o` | string | Write renamed files to a separate directory. Originals remain untouched. |
-| `--format` | `-f` | string | Filename pattern. Default: `{pos} - {title}`. Tokens: `{pos}`, `{title}`. |
+| `--format` | `-f` | string | Filename pattern. Default: `{title}`. Tokens: `{pos}`, `{title}`. |
 | `--auto-pick` | - | boolean | Skip interactive selection; auto-select the top API result. |
 | `--no-tag` | - | boolean | Rename files without updating ID3 metadata and cover art. |
 | `--dry` | - | boolean | Preview proposed renames without writing anything to disk. |
