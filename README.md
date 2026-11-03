@@ -53,6 +53,7 @@ freedom-tagger <path> [options]
 | `--album` | `-r` | string | Album name. Defaults to the folder name if omitted. |
 | `--output` | `-o` | string | Write renamed files to a separate directory. Originals remain untouched. |
 | `--format` | `-f` | string | Filename pattern. Default: `{title}`. Tokens: `{pos}`, `{title}`. |
+| `--custom-cover` | `-c` | string | Custom album cover |
 | `--auto-pick` | - | boolean | Skip interactive selection; auto-select the top API result. |
 | `--no-tag` | - | boolean | Rename files without updating ID3 metadata and cover art. |
 | `--dry` | - | boolean | Preview proposed renames without writing anything to disk. |

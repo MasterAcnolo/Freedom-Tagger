@@ -28,18 +28,19 @@ function displayUsageInstructions() {
 Usage: freedom-tagger <path> [options]
 
 Arguments:
-  path                    Path to the folder containing audio files
+  path                      Path to the folder containing audio files
 
 Options:
-  --artist,  -a <name>    Artist or band name (refines API query)
-  --album,   -r <name>    Album name (defaults to folder name)
-  --output,  -o <dir>     Write renamed files to an alternative output directory
-  --format,  -f <pattern> Filename format pattern (default: "{title}")
-                          Tokens: {pos}, {title}
-  --auto-pick             Automatically pick the top API album result
-  --no-tag                Rename files without updating ID3 metadata
-  --dry                   Preview changes without writing to disk
-  --help,    -h           Display usage information
+  --artist,   -a <name>     Artist or band name (refines API query)
+  --album,    -r <name>     Album name (defaults to folder name)
+  --output,   -o <dir>      Write renamed files to an alternative output directory
+  --format,   -f <pattern>  Filename format pattern (default: "{title}")
+                            Tokens: {pos}, {title}
+  --custom-cover, -c <path> Add a custom cover
+  --auto-pick               Automatically pick the top API album result
+  --no-tag                  Rename files without updating ID3 metadata
+  --dry                     Preview changes without writing to disk
+  --help,     -h            Display usage information
 `);
 }
 
@@ -57,6 +58,7 @@ async function main() {
         album: { type: 'string', short: 'r' },
         output: { type: 'string', short: 'o' },
         format: { type: 'string', short: 'f' },
+        'custom-cover': { type: 'string', short: 'c' },
         'auto-pick': { type: 'boolean' },
         'no-tag': { type: 'boolean' },
         dry: { type: 'boolean' },
@@ -84,6 +86,25 @@ async function main() {
         console.error('[ERROR] Missing required argument: path');
         displayUsageInstructions();
         process.exit(1);
+    }
+
+    if (parsedArguments['custom-cover']) {
+        const coverPath = parsedArguments['custom-cover'];
+        try {
+            await fs.stat(coverPath);
+            const ext = path.extname(coverPath).toLowerCase();
+            if (!['.jpg', '.jpeg', '.png', '.webp'].includes(ext)) {
+                console.error(`[ERROR] Invalid cover file format. Expected an image (.jpg, .png, etc.), got: ${ext}`);
+                process.exit(1);
+            }
+        } catch (error) {
+            if (error.code === 'ENOENT') {
+                console.error(`[ERROR] Custom cover file not found: ${coverPath}`);
+            } else {
+                console.error(`[ERROR] ${error.message}`);
+            }
+            process.exit(1);
+        }
     }
 
     const targetFolderPath = path.resolve(parsedArguments.path);
@@ -158,7 +179,15 @@ async function main() {
 
     console.log('\nFetching release tracklist and cover art from API...');
     const apiTracklist = await fetchReleaseTracklist(selectedAlbumRelease.id);
-    const coverArtBuffer = isTaggingDisabled ? null : await fetchCoverArtBuffer(selectedAlbumRelease.id);
+
+    let coverArtBuffer = null;
+    if (!isTaggingDisabled) {
+        if (parsedArguments['custom-cover']) {
+            coverArtBuffer = await fs.readFile(path.resolve(parsedArguments['custom-cover']));
+        } else {
+            coverArtBuffer = await fetchCoverArtBuffer(selectedAlbumRelease.id);
+        }
+    }
 
     const { proposedRenames, unmatchedFiles } = matchTracksToFiles(apiTracklist, localAudioFiles, filenameFormatPattern);
 
