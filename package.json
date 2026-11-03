@@ -1,0 +1,35 @@
+{
+  "version": "1.0.0",
+  "description": "CLI tool to rename and tag a music folder using MusicBrainz",
+  "homepage": "https://github.com/MasterAcnolo/Freedom-Tagger",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MasterAcnolo/Freedom-Tagger"
+  },
+  "main": "index.js",
+  "bin": {
+    "freedom-tagger": "./index.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "index.js",
+    "src/"
+  ],
+  "keywords": [
+    "sorter",
+    "cli",
+    "album",
+    "music"
+  ],
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "MasterAcnolo",
+  "license": "ISC",
+  "dependencies": {
+    "node-id3": "^0.2.9",
+    "string-similarity": "^4.0.4"
+  }
+}
