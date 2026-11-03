@@ -5,7 +5,7 @@ const path = require('path');
 const { parseArgs } = require('node:util');
 const { fetchAlbumReleases, fetchReleaseTracklist } = require('./src/api');
 const { matchTracksToFiles } = require('./src/matcher');
-const { updateAudioMetadata } = require('./src/metadata');
+const { updateAudioMetadata, fetchCoverArtBuffer } = require('./src/metadata');
 const { isAudioFile, extractArtistName } = require('./src/utils');
 const { createCliInterface, promptNumericChoice, promptYesNoConfirmation } = require('./src/prompt');
 
@@ -154,8 +154,9 @@ async function main() {
         selectedAlbumRelease = matchingAlbums[userChoice - 1];
     }
 
-    console.log('\nFetching release tracklist from API...');
+    console.log('\nFetching release tracklist and cover art from API...');
     const apiTracklist = await fetchReleaseTracklist(selectedAlbumRelease.id);
+    const coverArtBuffer = isTaggingDisabled ? null : await fetchCoverArtBuffer(selectedAlbumRelease.id);
 
     const { proposedRenames, unmatchedFiles } = matchTracksToFiles(apiTracklist, localAudioFiles, filenameFormatPattern);
 
@@ -217,7 +218,8 @@ async function main() {
                 resolvedArtistName,
                 selectedAlbumRelease.title,
                 position,
-                selectedAlbumRelease.date || ''
+                selectedAlbumRelease.date || '',
+                coverArtBuffer
             );
         }
     }
