@@ -115,6 +115,8 @@ async function main() {
         return;
     }
 
+    console.log(`[INFO] ${localAudioFiles.length} audio file(s) found.`);
+
     const albumName = parsedArguments.album || path.basename(targetFolderPath);
 
     console.log(`\nSearching MusicBrainz for album: '${albumName}'${artistName ? ` | Artist: '${artistName}'` : ''}...`);
