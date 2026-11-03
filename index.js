@@ -97,6 +97,7 @@ async function main() {
                 console.error(`[ERROR] Invalid cover file format. Expected an image (.jpg, .png, etc.), got: ${ext}`);
                 process.exit(1);
             }
+            console.log(`[INFO] Successully retrieve custom cover`)
         } catch (error) {
             if (error.code === 'ENOENT') {
                 console.error(`[ERROR] Custom cover file not found: ${coverPath}`);
