@@ -19,10 +19,6 @@ Apply renames, tags, and cover art? (y/n):
 
 ---
 
-## Requirements
-
-- **Node.js 18+** (uses native `fetch` and `node:util` `parseArgs`)
-
 ## Installation
 
 ```bash
