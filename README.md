@@ -42,18 +42,19 @@ freedom-tagger <path> [options]
 # Or: node index.js <path> [options]
 ```
 
-| Argument | Short | Type | Description |
-|---|---|---|---|
-| `path` | - | positional | **Required.** Path to the folder containing audio files. |
-| `--artist` | `-a` | string | Artist or band name. Strongly recommended to narrow down the search. |
-| `--album` | `-r` | string | Album name. Defaults to the folder name if omitted. |
-| `--output` | `-o` | string | Write renamed files to a separate directory. Originals remain untouched. |
-| `--format` | `-f` | string | Filename pattern. Default: `{title}`. Tokens: `{pos}`, `{title}`. |
-| `--custom-cover` | `-c` | string | Custom album cover |
-| `--auto-pick` | - | boolean | Skip interactive selection; auto-select the top API result. |
-| `--no-tag` | - | boolean | Rename files without updating ID3 metadata and cover art. |
-| `--dry` | - | boolean | Preview proposed renames without writing anything to disk. |
-| `--help` | `-h` | boolean | Print usage instructions and exit. |
+| Argument         | Short | Type       | Description                                                              |
+|------------------|-------|------------|--------------------------------------------------------------------------|
+| `path`           | -     | positional | **Required.** Path to the folder containing audio files.                 |
+| `--artist`       | `-a`  | string     | Artist or band name. Strongly recommended to narrow down the search.     |
+| `--album`        | `-r`  | string     | Album name. Defaults to the folder name if omitted.                      |
+| `--output`       | `-o`  | string     | Write renamed files to a separate directory. Originals remain untouched. |
+| `--format`       | `-f`  | string     | Filename pattern. Default: `{title}`. Tokens: `{pos}`, `{title}`.        |
+| `--single`       | `-s`  | boolean    | Specify that we are trying to retrieve a single                          |
+| `--custom-cover` | `-c`  | string     | Custom album cover                                                       |
+| `--auto-pick`    | -     | boolean    | Skip interactive selection; auto-select the top API result.              |
+| `--no-tag`       | -     | boolean    | Rename files without updating ID3 metadata and cover art.                |
+| `--dry`          | -     | boolean    | Preview proposed renames without writing anything to disk.               |
+| `--help`         | `-h`  | boolean    | Print usage instructions and exit.                                       |
 
 ### Examples
 
@@ -124,7 +125,8 @@ All string comparisons pass through `normalizeText()` first, lowercasing text an
 
 ## Known limitations
 
-- **Album Name Collision**: If an individual track shares the exact same name as the album itself, it can occasionally skew search results. Use the `--album` flag with precise casing to narrow down the query.
+- **Album Name Collision**: If an individual track shares the exact same name as the album itself, it can occasionally skew search results. Use the `--album` or `--single` flag with precise casing to narrow down the query.
+- **Wrong Cover**: Sometimes, the picture cover is not perfect, it's because musicbrainz cover are pictures. To fix this issues you can retry on another release (if possible) or force a custom cover with `--custom-cover <path>` flag  
 - **MP3-Only Tagging & Cover Art**: `node-id3` natively supports `.mp3` files. FLAC, M4A, OGG, and WAV files will be successfully renamed, but ID3 tags and cover art embedding will be skipped for non-MP3 formats.
 - **Top 5 Results Only**: If the correct release isn't in the top 5 MusicBrainz results, refine your query using both `--artist` and `--album`.
 - **Multi-disc Albums**: Track positions are indexed globally across all discs, which can occasionally result in duplicate position numbers on multi-disc releases.

@@ -1,4 +1,4 @@
-const { delay } = require('./utils');
+const {delay} = require('./utils');
 
 const USER_AGENT = "AlbumSorter/1.0";
 const BASE_URL = "https://musicbrainz.org/ws/2";
@@ -17,7 +17,7 @@ async function makeApiRequest(endpoint, queryParameters, maxRetries = 5) {
     for (let currentAttempt = 0; currentAttempt < maxRetries; currentAttempt++) {
         try {
             const apiResponse = await fetch(requestUrl, {
-                headers: { "User-Agent": USER_AGENT, "Accept": "application/json" }
+                headers: {"User-Agent": USER_AGENT, "Accept": "application/json"}
             });
 
             if (apiResponse.ok) {
@@ -43,15 +43,20 @@ async function makeApiRequest(endpoint, queryParameters, maxRetries = 5) {
  * Searches for album releases on MusicBrainz.
  * @param {string} albumName - Album title.
  * @param {string} [artistName=""] - Optional artist name.
+ * @param {boolean} isSingle - User flag to specify if it's a single
  * @returns {Promise<Array>} List of matching releases.
  */
-async function fetchAlbumReleases(albumName, artistName = "") {
+async function fetchAlbumReleases(albumName, artistName = "", isSingle = false) {
     let searchQuery = `release:"${albumName}"`;
     if (artistName) {
         searchQuery += ` AND artist:"${artistName}"`;
     }
 
-    const responseData = await makeApiRequest("/release", { query: searchQuery, fmt: "json" });
+    if (isSingle) {
+        searchQuery += ' AND primarytype:"Single"';
+    }
+
+    const responseData = await makeApiRequest("/release", {query: searchQuery, fmt: "json"});
     return responseData && responseData.releases ? responseData.releases.slice(0, 5) : [];
 }
 
@@ -61,7 +66,7 @@ async function fetchAlbumReleases(albumName, artistName = "") {
  * @returns {Promise<Array>} List of tracks with positions and titles.
  */
 async function fetchReleaseTracklist(releaseMbid) {
-    const responseData = await makeApiRequest(`/release/${releaseMbid}`, { inc: "recordings", fmt: "json" });
+    const responseData = await makeApiRequest(`/release/${releaseMbid}`, {inc: "recordings", fmt: "json"});
     const formattedTracks = [];
 
     if (responseData && responseData.media) {
@@ -77,4 +82,4 @@ async function fetchReleaseTracklist(releaseMbid) {
     return formattedTracks;
 }
 
-module.exports = { fetchAlbumReleases, fetchReleaseTracklist };
+module.exports = {fetchAlbumReleases, fetchReleaseTracklist};

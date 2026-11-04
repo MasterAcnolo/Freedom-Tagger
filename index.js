@@ -36,6 +36,8 @@ Options:
   --output,   -o <dir>      Write renamed files to an alternative output directory
   --format,   -f <pattern>  Filename format pattern (default: "{title}")
                             Tokens: {pos}, {title}
+  --single    -s            To specify that we are trying to retrieve a single                            
+
   --custom-cover, -c <path> Add a custom cover
   --auto-pick               Automatically pick the top API album result
   --no-tag                  Rename files without updating ID3 metadata
@@ -58,6 +60,7 @@ async function main() {
         album: { type: 'string', short: 'r' },
         output: { type: 'string', short: 'o' },
         format: { type: 'string', short: 'f' },
+        single: { type: 'boolean', short: 's' },
         'custom-cover': { type: 'string', short: 'c' },
         'auto-pick': { type: 'boolean' },
         'no-tag': { type: 'boolean' },
@@ -114,6 +117,8 @@ async function main() {
     const isTaggingDisabled = parsedArguments['no-tag'] || false;
     const isDryRunEnabled = parsedArguments.dry || false;
     const filenameFormatPattern = parsedArguments.format || "{title}";
+    const isSingle = !!parsedArguments.single;
+
 
     let destinationDirectory = targetFolderPath;
     if (parsedArguments.output) {
@@ -143,7 +148,7 @@ async function main() {
 
     console.log(`\nSearching MusicBrainz for album: '${albumName}'${artistName ? ` | Artist: '${artistName}'` : ''}...`);
 
-    const matchingAlbums = await fetchAlbumReleases(albumName, artistName);
+    const matchingAlbums = await fetchAlbumReleases(albumName, artistName, isSingle);
     if (matchingAlbums.length === 0) {
         console.log('[ERROR] No matching releases found on MusicBrainz.');
         return;
